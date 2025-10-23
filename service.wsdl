@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="MailService"
+						 targetNamespace="http://example.com/mailservice/"
+						 xmlns:tns="http://example.com/mailservice/"
+						 xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+						 xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+						 xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+	<types>
+		<xsd:schema targetNamespace="http://example.com/mailservice/">
+			<xsd:element name="SendEmailRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="to" type="xsd:string"/>
+						<xsd:element name="subject" type="xsd:string"/>
+						<xsd:element name="html" type="xsd:string"/>
+						<xsd:element name="text" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="SendEmailResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="confirmation" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+	</types>
+
+	<message name="SendEmailRequest">
+		<part name="parameters" element="tns:SendEmailRequest"/>
+	</message>
+
+	<message name="SendEmailResponse">
+		<part name="parameters" element="tns:SendEmailResponse"/>
+	</message>
+
+	<portType name="MailPort">
+		<operation name="SendEmail">
+			<input message="tns:SendEmailRequest"/>
+			<output message="tns:SendEmailResponse"/>
+		</operation>
+	</portType>
+
+	<binding name="MailBinding" type="tns:MailPort">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="SendEmail">
+			<soap:operation soapAction="urn:SendEmail" style="document"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+	</binding>
+
+	<service name="MailService">
+		<port name="MailPort" binding="tns:MailBinding">
+			<!-- Update host/port if different when deploying -->
+			<soap:address location="http://localhost:8000/wsdl"/>
+		</port>
+	</service>
+
+</definitions>
